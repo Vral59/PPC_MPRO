@@ -1,6 +1,7 @@
 import readcsp
 import geninstance
 import backtrack
+import AC
 
 def main():
     # Exemple d'utilisation de la lecture d'un fichier csp
@@ -21,7 +22,7 @@ def main():
         print("")
 
     resultat = backtrack.backtrack(variables, contraintes)
-    print("Résultat problème du cours : ",resultat)
+    print("Résultat problème du cours : ",resultat, "\n")
 
     # Création du csp binaire pour le problème des n reines avec n = 4
     nom_fichier_csp = "instance/queens_csp.txt"
@@ -31,8 +32,15 @@ def main():
     n, m, variables, contraintes = readcsp.lire_fichier_csp(nom_fichier_csp)
     # Résolutions
     resultat = backtrack.backtrack(variables, contraintes)
-    print("Résultat problèmes 4 reines : ", resultat)
+    print("Résultat problèmes 4 reines : ", resultat, "\n")
 
-
+    nom_fichier_csp = "instance/carrosserie.txt"
+    n, m, variables, contraintes = readcsp.lire_fichier_csp(nom_fichier_csp)
+    print("Variables : ", variables)
+    print("Contraintes : ", contraintes, "\n")
+    variables, contraintes = AC.AC(variables, contraintes)
+    print("Résultat problème carrosserie : ")
+    print("Variables : ", variables)
+    print("Contraintes : ", contraintes)
 if __name__ == "__main__":
     main()

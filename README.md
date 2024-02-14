@@ -19,3 +19,9 @@ Le fichier `readcsp.py` contient le code permettant de lire un fichier CSP au fo
 ## Utilisation du fichier geninstance.py
 
 Le fichier `geninstance.py` contient le code permettant de générer des instances. Pour l'instant uniquement celles du problème du placement de n reines.
+
+## Utilisation du fichier carrosserie
+x_1 : enjoliveurs
+x_2 : caisse
+x_3 : pare-chocs
+x_4 : capote
