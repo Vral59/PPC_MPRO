@@ -30,3 +30,76 @@ def generate_queens_csp(n, chemin_fichier):
 
     # Fermeture du fichier
     output_file.close()
+
+
+def read_graph_dimacs(chemin_fichier):
+    """
+    Ouvre un fichier dans le format DIMACS représentant un graphe et crée un dictionnaire du graph
+    :param chemin_fichier: Chemin vers le fichier DIMACS
+    :return: Un tuple, le nombre de sommets, le nombre d'arrêtes et le dictionnaire qui représente le graphe
+    """
+    graphe = {}
+
+    with open(chemin_fichier, 'r') as fichier:
+        lignes = fichier.readlines()
+
+        for ligne in lignes:
+            # Ignorer les lignes de commentaire
+            if ligne.startswith('c'):
+                continue
+
+            # Trouver la ligne définissant la structure du graphe
+            if ligne.startswith('p'):
+                _, _, nb_sommets, nb_aretes = ligne.split()
+                nb_sommets, nb_aretes = int(nb_sommets), int(nb_aretes)
+                break
+
+        # Initialiser le dictionnaire avec des listes vides pour chaque sommet
+        for i in range(1, nb_sommets + 1):
+            graphe[i] = []
+
+        # Parcourir les lignes d'arêtes et ajouter les voisins au dictionnaire
+        for ligne in lignes:
+            if ligne.startswith('e'):
+                _, sommet1, sommet2 = ligne.split()
+                sommet1, sommet2 = int(sommet1), int(sommet2)
+                graphe[sommet1].append(sommet2)
+                graphe[sommet2].append(sommet1)
+
+    return nb_sommets, nb_aretes, graphe
+
+
+def generate_graph_csp(graph, n, m, k, output_file):
+    """
+    Génère un CSP en .txt du problème coloration d'un graphe à partir d'un dictionnaire représentation un graphe
+    et un nombre de couleurs.
+
+    :param graph: Le dictionnaire représentant le graphe.
+    :param n: Le nombre de sommets du graphe.
+    :param m: Le nombre d'arrêtes du graphe.
+    :param k: Le nombre de couleurs utilisable.
+    :param output_file: Le chemin vers le fichier d'écriture du CSP.
+    :return:
+    """
+    with open(output_file, 'w') as file:
+        # Écriture du nombre de sommets (n) et d'arêtes (m)
+        file.write(f'n = {n}\n')
+        file.write(f'm = {2*m}\n\n')
+
+        # Écriture des domaines des variables
+        for node in range(1, n+1):
+            file.write(f"{node} = {{{','.join(map(str, range(1, k+1)))}}}\n")
+
+        file.write('\n')
+
+        # Écriture des contraintes
+        # Écriture des contraintes
+        for node, neighbors in graph.items():
+            for neighbor in neighbors:
+                file.write(f'C-{node}-{neighbor} = {{')
+                for i in range(1, k + 1):
+                    for j in range(1, k + 1):
+                        if i != j:
+                            file.write(f'({i}, {j}), ')
+                file.seek(file.tell() - 2)  # Supprimer la virgule et l'espace supplémentaires
+                file.write('}\n')

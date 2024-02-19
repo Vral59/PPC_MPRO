@@ -1,3 +1,5 @@
+import random
+
 def backtrack(variables, contraintes):
     """
     Algorithme de backtrack pour résoudre un CSP
@@ -41,6 +43,8 @@ def backtrack(variables, contraintes):
                     return False
         return True
 
+    keys = list(variables.keys())
+    random.shuffle(keys)
     # Appel de la fonction de backtrack récursive
     if backtrack_recursive():
         return solution
