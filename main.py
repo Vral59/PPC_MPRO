@@ -12,19 +12,19 @@ def test_nqueens():
     # Création du csp binaire pour le problème des n reines avec n = 4
     nom_fichier_csp = "instance/queens_csp.txt"
     # Création d'un CSP
-    geninstance.generate_queens_csp(12, nom_fichier_csp)
+    geninstance.generate_queens_csp(15, nom_fichier_csp)
     # Lecture du CSP
     n, m, variables, contraintes = readcsp.lire_fichier_csp(nom_fichier_csp)
     # Résolutions
     start_time = time.time()
-    resultat = backtrack.backtrack(variables, contraintes)
+    resultat = backtrack.backtrack(variables, contraintes, False)
     end_time = time.time()
     if resultat is None:
-        print("Pas de solution possible pour ce problème de coloration")
+        print("Pas de solution possible pour ce problème de reines")
     else:
         print("Résultat problèmes 12 reines : ", resultat, "\n")
         print("Variables : ", variables)
-        print("Temps de calcule : ", end_time - start_time)
+        print("Temps de calcul : ", end_time - start_time)
 
 
 def test_carrosserie():
@@ -41,7 +41,7 @@ def test_carrosserie():
     print("Contraintes : ", contraintes)
     resultat = backtrack.backtrack(variables, contraintes)
     if resultat is None:
-        print("Pas de solution possible pour ce problème de coloration")
+        print("Pas de solution possible pour ce problème de carrosserie")
     else:
         print("Résultat problèmes carrosserie : ", resultat, "\n")
 
@@ -53,7 +53,7 @@ def test_coloration():
     nb_sommets, nb_aretes, graph = geninstance.read_graph_dimacs("instance/DIMACS Graphs/light_graph.col")
     print(graph)
     nom_fichier_csp_graph = 'instance/exemple_csp_graph.txt'
-    geninstance.generate_graph_csp(graph, nb_sommets, nb_aretes, 4, nom_fichier_csp_graph)
+    geninstance.generate_graph_csp(graph, nb_sommets, nb_aretes, 2, nom_fichier_csp_graph)
     n, m, variables, contraintes = readcsp.lire_fichier_csp(nom_fichier_csp_graph)
     start_time = time.time()
     resultat = backtrack.backtrack(variables, contraintes)
@@ -62,7 +62,7 @@ def test_coloration():
         print("Pas de solution possible pour ce problème de coloration")
     else:
         print("Résultat problèmes de coloration: ", resultat, "\n")
-    print("Temps de calcule : ", end_time - start_time)
+    print("Temps de calcul : ", end_time - start_time)
 
 
 def main():
@@ -89,9 +89,9 @@ def main():
     # Test nqueens :
     test_nqueens()
     # Test carrosserie
-    test_carrosserie()
+    #test_carrosserie()
     # Test coloration
-    test_coloration()
+    #test_coloration()
 
 
 if __name__ == "__main__":
