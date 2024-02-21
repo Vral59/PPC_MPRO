@@ -21,11 +21,11 @@ def test_nqueens():
     print("---------Debut resolution-----")
 
     # Symetries
-    geninstance.add_c1_smaller_c2(variables, contraintes, '1', str(n))
+    # geninstance.add_c1_smaller_c2(variables, contraintes, '1', str(n))
 
     # Résolutions
     start_time = time.time()
-    resultat = backtrack_queens.backtrack(variables, contraintes, True, "smallest_domain",  pick_val = "smallest", break_symmetries=True)
+    resultat = backtrack.backtrack(variables, contraintes, True, False, "smallest_domain", "smallest")
     end_time = time.time()
     if resultat is None:
         print("Pas de solution possible pour ce problème de reines")
@@ -58,14 +58,17 @@ def test_coloration():
     """
     Fonction de démonstration du CSP de coloration d'un graphe.
     """
-    nb_sommets, nb_aretes, graph = geninstance.read_graph_dimacs("instance/DIMACS Graphs/david.col")
-    print(graph)
+    # Lecture du DIMACS
+    nb_sommets, nb_aretes, graph = geninstance.read_graph_dimacs("instance/DIMACS Graphs/myciel6.col")
     nom_fichier_csp_graph = 'instance/exemple_csp_graph.txt'
-    geninstance.generate_graph_csp(graph, nb_sommets, nb_aretes, 11, nom_fichier_csp_graph)
+    # Creation du CSP à partir du DIMACS
+    geninstance.generate_graph_csp(graph, nb_sommets, nb_aretes, 20, nom_fichier_csp_graph)
     n, m, variables, contraintes = readcsp.lire_fichier_csp(nom_fichier_csp_graph)
-    #variables, contraintes = AC.AC(variables, contraintes)
+    # Application de l'algorithme d'AC4
+    variables, contraintes = AC.AC4(variables, contraintes)
+    # Résolution du problème
     start_time = time.time()
-    resultat = backtrack_color.backtrack(graph, variables, contraintes, True, "smallest_domain")
+    resultat = backtrack.backtrack(variables, contraintes, True, False, "smallest_domain", "smallest")
     end_time = time.time()
     if resultat is None:
         print("Pas de solution possible pour ce problème de coloration")
@@ -75,32 +78,12 @@ def test_coloration():
 
 
 def main():
-    # Exemple d'utilisation de la lecture d'un fichier csp
-    nom_fichier_csp = 'instance/exemple_csp.txt'
-    n, m, variables, contraintes = readcsp.lire_fichier_csp(nom_fichier_csp)
-
-    if n is not None and m is not None and variables is not None and contraintes is not None:
-        print("Exemple de lecture d'un CSP avec le fichier fichier : ", nom_fichier_csp)
-        print("Nombre de variables:", n)
-        print("Nombre de contraintes:", m)
-        print("\nVariables:")
-        for nom, domaine in variables.items():
-            print(f"{nom}: {domaine}")
-
-        print("\nContraintes:")
-        for indices, valeurs in contraintes.items():
-            print(f"C-{indices[0]}-{indices[1]}: {valeurs}")
-        print("")
-
-    resultat = backtrack.backtrack(variables, contraintes)
-    print("Résultat problème du cours : ", resultat, "\n")
-
     # Test nqueens :
-    test_nqueens()
+    #test_nqueens()
     # Test carrosserie
     #test_carrosserie()
     # Test coloration
-    #test_coloration()
+    test_coloration()
 
 
 if __name__ == "__main__":
