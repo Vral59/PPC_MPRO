@@ -103,3 +103,10 @@ def generate_graph_csp(graph, n, m, k, output_file):
                             file.write(f'({i}, {j}), ')
                 file.seek(file.tell() - 2)  # Supprimer la virgule et l'espace supplémentaires
                 file.write('}\n')
+
+
+# wrapper
+                
+def add_all_diff(variables, contraintes, x1, x2):
+    contraintes[(x1,x2)] = [(a, b) for a in variables[x1] for b in variables[x2] if a != b]
+    #return contraintes
