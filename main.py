@@ -1,6 +1,7 @@
 import readcsp
 import geninstance
 import backtrack
+import backtrack_queens
 import AC
 import time
 
@@ -12,12 +13,18 @@ def test_nqueens():
     # Création du csp binaire pour le problème des n reines avec n = 4
     nom_fichier_csp = "instance/queens_csp.txt"
     # Création d'un CSP
-    geninstance.generate_queens_csp(15, nom_fichier_csp)
+    geninstance.generate_queens_csp(50, nom_fichier_csp)
     # Lecture du CSP
     n, m, variables, contraintes = readcsp.lire_fichier_csp(nom_fichier_csp)
+
+    # Symetries
+    #print("contraintes[x1, x2] = ", contraintes[('c_1', 'c_' + str(n))], "\n")
+    geninstance.add_c1_smaller_c2(variables, contraintes, 'c_1', 'c_' + str(n))
+    #print("contraintes [x1, x2]= ", contraintes[('c_1', 'c_' + str(n))])
+
     # Résolutions
     start_time = time.time()
-    resultat = backtrack.backtrack(variables, contraintes, False)
+    resultat = backtrack_queens.backtrack(variables, contraintes, True, "smallest_domain")
     end_time = time.time()
     if resultat is None:
         print("Pas de solution possible pour ce problème de reines")
