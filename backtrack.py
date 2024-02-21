@@ -28,7 +28,7 @@ def backtrack(variables, contraintes, FW=False):
         nonlocal variables
         nonlocal contraintes
         for y in [nom for nom in variables if nom not in solution] :
-            variables[y] = [b for b in variables[y] if check_FW(a, b, x, y)]  
+            variables[y] = {b for b in variables[y] if check_FW(a, b, x, y)}
             
     def backtrack_recursive():
         #print("variables = ", variables)

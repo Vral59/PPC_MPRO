@@ -108,5 +108,9 @@ def generate_graph_csp(graph, n, m, k, output_file):
 # wrapper
                 
 def add_all_diff(variables, contraintes, x1, x2):
-    contraintes[(x1,x2)] = [(a, b) for a in variables[x1] for b in variables[x2] if a != b]
-    #return contraintes
+    l1 = {(a, b) for a in variables[x1] for b in variables[x2] if a != b}
+    contraintes[(x1,x2)] = l1.intersection(contraintes[(x1,x2)])
+
+def add_c1_smaller_c2(variables, contraintes, x1, x2):
+    l1 = {(a, b) for a in variables[x1] for b in variables[x2] if a < b}
+    contraintes[(x1,x2)] = l1.intersection(contraintes[(x1,x2)])
