@@ -31,3 +31,42 @@ def AC(variables, contraintes):
                 elif c1 == indices[1] and c2 not in indices:
                     aTester.append((indices[0], c1))         
     return(variables, contraintes)
+
+
+def initAC4(variables, contraintes):
+    Q = set()
+    S = {}
+
+    for c, valeurs in contraintes.items():
+        x, y = c
+        for a in variables[x]:
+            total = 0
+            for b in variables[y]:
+                if (a, b) in valeurs:
+                    total += 1
+                    if (y, b) not in S:
+                        S[(y, b)] = set()
+                    S[(y, b)].add((x, a))
+            if total == 0:
+                variables[x] = [val for val in variables[x] if val != a]
+                Q.add((x, a))
+
+    return Q, S
+
+
+def AC4(variables, contraintes):
+    Q, S = initAC4(variables, contraintes)
+
+    while Q:
+        y, b = Q.pop()
+        for x, a in S.get((y, b), set()):
+            if (x, a) in Q:
+                Q.remove((x, a))
+            for x_a, y_b in S.items():
+                if (x, a) in y_b:
+                    y_b.remove((x, a))
+                    if len(y_b) == 0 and a in variables[x]:
+                        variables[x].remove(a)
+                        Q.add((x, a))
+
+    return variables, contraintes
