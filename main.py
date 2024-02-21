@@ -25,7 +25,7 @@ def test_nqueens():
 
     # Résolutions
     start_time = time.time()
-    resultat = backtrack.backtrack(variables, contraintes, True, False, "smallest_domain", "smallest")
+    resultat = backtrack.backtrack(variables, contraintes, True, False, False, "smallest_domain", "smallest")
     end_time = time.time()
     if resultat is None:
         print("Pas de solution possible pour ce problème de reines")
@@ -59,16 +59,16 @@ def test_coloration():
     Fonction de démonstration du CSP de coloration d'un graphe.
     """
     # Lecture du DIMACS
-    nb_sommets, nb_aretes, graph = geninstance.read_graph_dimacs("instance/DIMACS Graphs/myciel6.col")
+    nb_sommets, nb_aretes, graph = geninstance.read_graph_dimacs("instance/DIMACS Graphs/huck.col")
     nom_fichier_csp_graph = 'instance/exemple_csp_graph.txt'
     # Creation du CSP à partir du DIMACS
-    geninstance.generate_graph_csp(graph, nb_sommets, nb_aretes, 20, nom_fichier_csp_graph)
+    geninstance.generate_graph_csp(graph, nb_sommets, nb_aretes, 11, nom_fichier_csp_graph)
     n, m, variables, contraintes = readcsp.lire_fichier_csp(nom_fichier_csp_graph)
     # Application de l'algorithme d'AC4
     variables, contraintes = AC.AC4(variables, contraintes)
     # Résolution du problème
     start_time = time.time()
-    resultat = backtrack.backtrack(variables, contraintes, True, False, "smallest_domain", "smallest")
+    resultat = backtrack.backtrack(variables, contraintes, False, False, True, "random", "smallest")
     end_time = time.time()
     if resultat is None:
         print("Pas de solution possible pour ce problème de coloration")

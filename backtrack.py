@@ -1,6 +1,7 @@
 import random
 
-def backtrack(variables, contraintes, MAC=False, FW=False, pick_var="smallest_ind", pick_val="smallest"):
+
+def backtrack(variables, contraintes, MAC=False, FW=False, RMAC=False, pick_var="smallest_ind", pick_val="smallest"):
     """
     Algorithme de backtrack pour résoudre un CSP
 
@@ -8,13 +9,18 @@ def backtrack(variables, contraintes, MAC=False, FW=False, pick_var="smallest_in
     :param contraintes: Dictionnaire des variables et des contraintes binaires.
     :param MAC: Activation ou désactivation de l'algorithme MAC.
     :param FW: Activation ou désactivation du FordWard Checking.
+    :param RMAC: Activation ou désactivation de l'algorithme MAC sur la racine uniquement.
     :param pick_var: Heuristique de choix sur les variables.
     :param pick_val: Heuristique de choix sur les Valeurs.
     :return: Une solution valide ou None.
     """
     solution = {}  # Dictionnaire pour stocker les valeurs attribuées aux variables
-    if MAC and FW:
-        print("Ne fonctionne pas avec MAC et FW en True")
+    # Fixation d'un seed pour l'aléatoire
+    #seed_value = 42
+    #random.seed(seed_value)
+
+    if sum([MAC, RMAC, FW]) > 1:
+        print("Ne fonctionne pas avec plusieurs en True")
         return None
 
     def apply_FW(solution, x, a):
@@ -142,6 +148,8 @@ def backtrack(variables, contraintes, MAC=False, FW=False, pick_var="smallest_in
             if FW:
                 apply_FW(solution, variable_non_attribuee, valeur)
             elif MAC:
+                maintain_ac4_consistency(variable_non_attribuee, valeur)
+            elif RMAC and len(solution) == 1:
                 maintain_ac4_consistency(variable_non_attribuee, valeur)
 
             if verifie_contraintes():
