@@ -1,7 +1,7 @@
 import readcsp
 import geninstance
 import backtrack
-import backtrack_queens
+import backtrack_color
 import AC
 import time
 
@@ -11,25 +11,24 @@ def test_nqueens():
     Fonction de démonstration du CSP des nqueens.
     """
     # Création du csp binaire pour le problème des n reines avec n = 4
+    n = 20
     nom_fichier_csp = "instance/queens_csp.txt"
     # Création d'un CSP
-    geninstance.generate_queens_csp(50, nom_fichier_csp)
+    geninstance.generate_queens_csp(n, nom_fichier_csp)
     # Lecture du CSP
     n, m, variables, contraintes = readcsp.lire_fichier_csp(nom_fichier_csp)
 
     # Symetries
-    #print("contraintes[x1, x2] = ", contraintes[('c_1', 'c_' + str(n))], "\n")
     geninstance.add_c1_smaller_c2(variables, contraintes, 'c_1', 'c_' + str(n))
-    #print("contraintes [x1, x2]= ", contraintes[('c_1', 'c_' + str(n))])
 
     # Résolutions
     start_time = time.time()
-    resultat = backtrack_queens.backtrack(variables, contraintes, True, "smallest_domain")
+    resultat = backtrack.backtrack(variables, contraintes, True, "smallest_domain",  pick_val = "smallest")
     end_time = time.time()
     if resultat is None:
         print("Pas de solution possible pour ce problème de reines")
     else:
-        print("Résultat problèmes 12 reines : ", resultat, "\n")
+        print("Résultat problèmes ", str(n), " reines : ", resultat, "\n")
         print("Variables : ", variables)
         print("Temps de calcul : ", end_time - start_time)
 
@@ -57,13 +56,14 @@ def test_coloration():
     """
     Fonction de démonstration du CSP de coloration d'un graphe.
     """
-    nb_sommets, nb_aretes, graph = geninstance.read_graph_dimacs("instance/DIMACS Graphs/light_graph.col")
+    nb_sommets, nb_aretes, graph = geninstance.read_graph_dimacs("instance/DIMACS Graphs/david.col")
     print(graph)
     nom_fichier_csp_graph = 'instance/exemple_csp_graph.txt'
-    geninstance.generate_graph_csp(graph, nb_sommets, nb_aretes, 2, nom_fichier_csp_graph)
+    geninstance.generate_graph_csp(graph, nb_sommets, nb_aretes, 11, nom_fichier_csp_graph)
     n, m, variables, contraintes = readcsp.lire_fichier_csp(nom_fichier_csp_graph)
+    #variables, contraintes = AC.AC(variables, contraintes)
     start_time = time.time()
-    resultat = backtrack.backtrack(variables, contraintes)
+    resultat = backtrack_color.backtrack(graph, variables, contraintes, True, "smallest_domain")
     end_time = time.time()
     if resultat is None:
         print("Pas de solution possible pour ce problème de coloration")

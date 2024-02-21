@@ -1,6 +1,6 @@
 import random
 
-def backtrack(variables, contraintes, FW=False, pick_var = "smallest_ind", pick_val = "smallest"):
+def backtrack(graph, variables, contraintes, FW=False, method = "smallest_ind"):
     """
     Algorithme de backtrack pour résoudre un CSP
 
@@ -42,30 +42,14 @@ def backtrack(variables, contraintes, FW=False, pick_var = "smallest_ind", pick_
         # Choisir une variable non attribuée
 
         variables_non_attribuee = [nom for nom in variables if nom not in solution]
-        if pick_var == "smallest_ind":
+        if method == "smallest_ind":
             variable_non_attribuee = variables_non_attribuee[0]
-        elif pick_var == "biggest_ind":
-            variable_non_attribuee = variables_non_attribuee[-1]
-        elif pick_var == "smallest_domain":
+        elif method == "smallest_domain":
             variable_non_attribuee = min(variables_non_attribuee, key=lambda v: len(variables[v]))
-        elif pick_var == "largest_domain":
-            variable_non_attribuee = max(variables_non_attribuee, key=lambda v: len(variables[v]))
-        elif pick_var == "random":
+        elif method == "random":
             variable_non_attribuee = random.choice(variables_non_attribuee)
-        elif pick_var == 'most_constrained': # le moins de possibilités possibles
-            variable_non_attribuee = min(variables_non_attribuee, key=lambda v: sum(len(contraintes[(v, nom)]) for nom in variables if (v, nom) in contraintes) + sum(len(contraintes[(nom, v)]) for nom in variables if (nom, v) in contraintes))
-        elif pick_var == 'least_constrained': # le plus de possibilités possibles
-            variable_non_attribuee = max(variables_non_attribuee, key=lambda v: sum(len(contraintes[(v, nom)]) for nom in variables if (v, nom) in contraintes) + sum(len(contraintes[(nom, v)]) for nom in variables if (nom, v) in contraintes))
-
-
-        if pick_val == "smallest":
-            variables[variable_non_attribuee] = sorted(variables[variable_non_attribuee])
-        elif pick_val == "bigest":
-            variables[variable_non_attribuee] = sorted(variables[variable_non_attribuee], reverse=True)
-        elif pick_val == "smallest_domain": # valeur la moins présente dans les contraintes
-            variables[variable_non_attribuee] = sorted(variables[variable_non_attribuee], key=lambda v: sum(sum(1 for z in contraintes[(x,y)] if v in z) for (x, y) in contraintes ))
-        elif pick_val == "biggest_domain":
-            variables[variable_non_attribuee] = sorted(variables[variable_non_attribuee], key=lambda v: sum(sum(1 for z in contraintes[(x,y)] if v in z) for (x, y) in contraintes ), reverse=True)
+        elif method == "largest_neighbor":
+            variable_non_attribuee = max(variables_non_attribuee, key=lambda v: len(graph[int(v)]))
 
 
         # Essayer chaque valeur du domaine de la variable
