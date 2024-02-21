@@ -13,14 +13,14 @@ def generate_queens_csp(n, chemin_fichier):
 
     # Écriture des variables pour les colonnes des reines
     for i in range(1, n + 1):
-        output_file.write(f"c_{i} = {{{','.join(map(str, range(1, n + 1)))}}}\n")
+        output_file.write(f"{i} = {{{','.join(map(str, range(1, n + 1)))}}}\n")
 
     output_file.write("\n")
 
     # Génération des contraintes de différence de colonnes
     for i in range(1, n + 1):
         for j in range(i + 1, n + 1):
-            constraint_name = f"C-c_{i}-c_{j}"
+            constraint_name = f"C-{i}-{j}"
             # Génération de toutes les contraintes en une seule fois
             constraint_values = [(c_i, c_j) for c_i in range(1, n + 1) for c_j in range(1, n + 1) if c_j - c_i != j - i
                                  and c_i - c_j != j - i

@@ -1,6 +1,7 @@
 import readcsp
 import geninstance
 import backtrack
+import backtrack_queens
 import backtrack_color
 import AC
 import time
@@ -11,19 +12,20 @@ def test_nqueens():
     Fonction de démonstration du CSP des nqueens.
     """
     # Création du csp binaire pour le problème des n reines avec n = 4
-    n = 20
+    n = 45
     nom_fichier_csp = "instance/queens_csp.txt"
     # Création d'un CSP
-    geninstance.generate_queens_csp(n, nom_fichier_csp)
+    #geninstance.generate_queens_csp(n, nom_fichier_csp)
     # Lecture du CSP
     n, m, variables, contraintes = readcsp.lire_fichier_csp(nom_fichier_csp)
+    print("---------Debut resolution-----")
 
     # Symetries
-    geninstance.add_c1_smaller_c2(variables, contraintes, 'c_1', 'c_' + str(n))
+    geninstance.add_c1_smaller_c2(variables, contraintes, '1', str(n))
 
     # Résolutions
     start_time = time.time()
-    resultat = backtrack.backtrack(variables, contraintes, True, "smallest_domain",  pick_val = "smallest")
+    resultat = backtrack_queens.backtrack(variables, contraintes, True, "smallest_domain",  pick_val = "smallest", break_symmetries=True)
     end_time = time.time()
     if resultat is None:
         print("Pas de solution possible pour ce problème de reines")

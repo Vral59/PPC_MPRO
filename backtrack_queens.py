@@ -1,6 +1,6 @@
 import random
 
-def backtrack(variables, contraintes, FW=False, pick_var = "smallest_ind", pick_val = "smallest"):
+def backtrack(variables, contraintes, FW=False, pick_var = "smallest_ind", pick_val = "smallest", break_symmetries = True):
     """
     Algorithme de backtrack pour résoudre un CSP
 
@@ -10,6 +10,8 @@ def backtrack(variables, contraintes, FW=False, pick_var = "smallest_ind", pick_
     :return: Une solution valide ou None.
     """
     solution = {}  # Dictionnaire pour stocker les valeurs attribuées aux variables
+    n = len(variables)
+    print("n = ", n)
 
     def check_FW(a, b, x, y):
         nonlocal variables
@@ -29,6 +31,18 @@ def backtrack(variables, contraintes, FW=False, pick_var = "smallest_ind", pick_
         nonlocal contraintes
         for y in [nom for nom in variables if nom not in solution] : # que les variables non attribuees
             variables[y] = {b for b in variables[y] if check_FW(a, b, x, y)} 
+
+    def symetriques(x, a, n):
+        return( [(x, a), (str(a), n + 1 - int(x)), (str(n + 1 - int(x)), n+1 - a), (str(n + 1 - a), int(x))])
+
+    def apply_sym(x, a):
+        nonlocal variables
+        nonlocal contraintes
+        nonlocal n
+        for (y,b) in symetriques(x, a, n):
+            if b in variables[y]:
+                variables[y].remove(b)
+    
             
     def backtrack_recursive():
         #print("variables = ", variables)
@@ -76,6 +90,9 @@ def backtrack(variables, contraintes, FW=False, pick_var = "smallest_ind", pick_
             if  FW:
                 #print(" variables = ", variable_non_attribuee, " valeur = ", valeur)
                 apply_FW(solution, variable_non_attribuee, valeur)
+
+            if break_symmetries:
+                apply_sym(variable_non_attribuee, valeur)
 
             # Vérifier si la solution partielle satisfait toutes les contraintes
             if verifie_contraintes():
