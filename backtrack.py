@@ -53,9 +53,9 @@ def backtrack(variables, contraintes, FW=False, pick_var = "smallest_ind", pick_
         elif pick_var == "random":
             variable_non_attribuee = random.choice(variables_non_attribuee)
         elif pick_var == 'most_constrained': # le moins de possibilités possibles
-            variable_non_attribuee = min(variables_non_attribuee, key=lambda v: sum(len(contraintes[(v, nom)]) for nom in variables if (v, nom) in contraintes) + sum(len(contraintes[(nom, v)]) for nom in variables if (nom, v) in contraintes))
+            variable_non_attribuee = min(variables_non_attribuee, key=lambda v: sum(len(contraintes[(v, nom)]) for nom in variables_non_attribuee if (v, nom) in contraintes) + sum(len(contraintes[(nom, v)]) for nom in variables_non_attribuee if (nom, v) in contraintes))
         elif pick_var == 'least_constrained': # le plus de possibilités possibles
-            variable_non_attribuee = max(variables_non_attribuee, key=lambda v: sum(len(contraintes[(v, nom)]) for nom in variables if (v, nom) in contraintes) + sum(len(contraintes[(nom, v)]) for nom in variables if (nom, v) in contraintes))
+            variable_non_attribuee = max(variables_non_attribuee, key=lambda v: sum(len(contraintes[(v, nom)]) for nom in variables_non_attribuee if (v, nom) in contraintes) + sum(len(contraintes[(nom, v)]) for nom in variables_non_attribuee if (nom, v) in contraintes))
 
 
         if pick_val == "smallest":
