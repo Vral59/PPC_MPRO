@@ -49,7 +49,7 @@ def ac3(variables: Dict[str, List[int]], contraintes: Dict[Tuple[str, str], List
     return variables_copy, contraintes
 
 
-def initAC4(variables: Dict[str, List[int]], contraintes: Dict[Tuple[str, str], List[Tuple[int, int]]]) -> Tuple[
+def _initAC4(variables: Dict[str, List[int]], contraintes: Dict[Tuple[str, str], List[Tuple[int, int]]]) -> Tuple[
     Set[Tuple[str, int]], Dict[Tuple[str, int], Set[Tuple[str, int]]]]:
     """
     Initialise l'Arc-Consistency 4 (AC4) avec une file Q et un dictionnaire S.
@@ -89,7 +89,7 @@ def ac4(variables: Dict[str, List[int]], contraintes: Dict[Tuple[str, str], List
     :return: Un tuple contenant les variables mises à jour et les contraintes mises à jour après l'application de l'Arc-Consistency 4.
     """
     variables_copy = {key: value.copy() for key, value in variables.items()}
-    Q, S = initAC4(variables_copy, contraintes)
+    Q, S = _initAC4(variables_copy, contraintes)
 
     while Q:
         y, b = Q.pop()
