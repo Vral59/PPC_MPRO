@@ -23,6 +23,16 @@ def backtrack(
     :param pick_val: Heuristique de choix sur les valeurs.
     :return: Une solution valide ou None.
     """
+    # Vérifier si pick_var est une valeur valide
+    valid_pick_var_options = ["smallest_ind", "biggest_ind", "smallest_domain", "largest_domain", "random", "most_constrained", "least_constrained"]
+    if pick_var not in valid_pick_var_options:
+        raise ValueError(f"Valeur invalide pour pick_var. Attendue parmi {valid_pick_var_options}, obtenue {pick_var}")
+
+    # Vérifier si pick_val est une valeur valide
+    valid_pick_val_options = ["smallest", "biggest", "smallest_domain", "biggest_domain"]
+    if pick_val not in valid_pick_val_options:
+        raise ValueError(f"Valeur invalide pour pick_val. Attendue parmi {valid_pick_val_options}, obtenue {pick_val}")
+
     solution: Dict[str, int] = {}  # Dictionnaire pour stocker les valeurs attribuées aux variables
     node: int = 0
 
