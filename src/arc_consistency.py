@@ -84,7 +84,7 @@ def _initAC4(variables: Dict[str, List[int]], contraintes: Dict[Tuple[str, str],
     return Q, S
 
 
-def ac4(variables: Dict[str, List[int]], contraintes: Dict[Tuple[str, str], List[Tuple[int, int]]]) \
+def ac4_old(variables: Dict[str, List[int]], contraintes: Dict[Tuple[str, str], List[Tuple[int, int]]]) \
         -> Tuple[Dict[str, List[int]], Dict[Tuple[str, str], List[Tuple[int, int]]]]:
     """
     Applique l'Arc-Consistency 4 (AC4) à un ensemble de variables et de contraintes.
@@ -116,3 +116,72 @@ def ac4(variables: Dict[str, List[int]], contraintes: Dict[Tuple[str, str], List
                         Q.add((x, a))
 
     return variables_copy, contraintes
+
+
+def ac4(variables: Dict[str, List[int]], contraintes: Dict[Tuple[str, str], List[Tuple[int, int]]]) \
+        -> Tuple[bool, Dict[str, List[int]]]:
+    """
+    Applique l'Arc-Consistency 4 (AC4) à un ensemble de variables et de contraintes.
+
+    :param variables: Un dictionnaire où les clés sont les noms des variables et les valeurs sont des listes de
+    domaines possibles.
+    :param contraintes: Un dictionnaire où les clés sont des paires de variables et les valeurs sont des listes de
+    valeurs autorisées.
+    :return: Un tuple contenant un booléen indiquant si l'AC4 a réussi et les variables mises à jour après l'application
+    de l'Arc-Consistency 4.
+    """
+
+    variables_copy = {key: value.copy() for key, value in variables.items()}
+
+    # Construction et initialisation des ensembles de support (support et counter)
+    support = {}
+    for x in variables_copy.keys():
+        for val in variables_copy[x]:
+            support[(x, val)] = []
+
+    # Initialisation du compteur
+    counter = {}
+    count = 0
+
+    for (Xi, Xj) in contraintes.keys():
+        for Vi in variables_copy[Xi]:
+            for Vj in variables_copy[Xj]:
+                count += 1
+                if (Vi, Vj) in contraintes[(Xi, Xj)]:
+                    if (Xi, Xj, Vi) not in counter:
+                        counter[(Xi, Xj, Vi)] = 1
+                    else:
+                        counter[(Xi, Xj, Vi)] += 1
+
+    # file de suppression qui contient tous les <variable-valeur>, où la valeur a été supprimée du domaine
+    # de la variable, mais l'effet de la suppression n'a pas encore été propagé
+    deletion_queue = []
+    count2 = 0
+
+    for (Xi, Xj) in contraintes.keys():
+        for Vi in variables_copy[Xi]:
+            tot = 0
+            for Vj in variables_copy[Xj]:
+                count2 += 1
+                if (Vi, Vj) in contraintes[(Xi, Xj)]:
+                    tot += 1
+                    support[(Xj, Vj)].append((Xi, Vi))
+            if tot == 0:
+                variables_copy[Xi].remove(Vi)
+                deletion_queue.append((Xi, Vi))
+                if len(variables_copy[Xi]) == 0:
+                    return False, variables_copy
+
+    # Propagation des valeurs supprimées
+    while len(deletion_queue) != 0:
+        (xi, vi) = deletion_queue.pop(0)
+        for (xj, vj) in support[(xi, vi)]:
+            count2 += 1
+            counter[(xj, xi, vj)] -= 1
+            if counter[(xj, xi, vj)] == 0 and vj in variables_copy[xj]:
+                variables_copy[xj].remove(vj)
+                deletion_queue.append((xj, vj))
+                if len(variables_copy[xj]) == 0:
+                    return False, variables_copy
+
+    return True, variables_copy

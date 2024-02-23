@@ -138,11 +138,12 @@ def backtrack(
             elif MAC4:
                 for el in solution:
                     variables[el] = [solution[el]]
-                variables, _ = arc_consistency.ac4(variables, constraints)
+                _, variables = arc_consistency.ac4(variables, constraints)
+                # variables, _ = arc_consistency.ac4_old(variables, constraints)
+
             elif RMAC and len(solution) == 1:
-                # TODO : Nettoyer la boucle inutile
-                for el in solution:
-                    variables[el] = [solution[el]]
+                el = next(iter(solution))  # Obtenez le seul élément du dictionnaire
+                variables[el] = [solution[el]]
                 variables, _ = arc_consistency.ac3(variables, constraints)
 
             if verifie_contraintes():

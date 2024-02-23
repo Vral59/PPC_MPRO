@@ -63,7 +63,7 @@ def solve_carrosserie() -> None:
     variables_ac3, constraints_ac3 = arc_consistency.ac3(variables, constraints)
     end_time_ac3 = time.time()
     start_time_ac4 = time.time()
-    variables_ac4, constraints_ac4 = arc_consistency.ac4(variables, constraints)
+    _, variables_ac4 = arc_consistency.ac4(variables, constraints)
     end_time_ac4 = time.time()
 
     print(f"Variables et domaines de base : {variables}")
@@ -132,7 +132,7 @@ def solve_coloration(k: int, graph_path: str, save_file: bool = False,
 
 def main():
     # Test des n reines avec différentes valeurs de taille de plateau.
-    for n_value in [15]:
+    for n_value in [12]:
         print(f"\nTest des n reines avec n={n_value}")
         solve_nqueens(n_value, use_MAC4=True, pick_var="smallest_domain", pick_val="smallest")
 
@@ -140,9 +140,9 @@ def main():
     # solve_carrosserie()
 
     # print("\nTesting graph coloring problem:")
-    # graph_path = "../instance/DIMACS Graphs/huck.col"
-    # k_value = 11
-    # solve_coloration(k_value, graph_path, use_RMAC=True, pick_var="random", pick_val="smallest")
+    # graph_path = "../instance/DIMACS Graphs/games120.col"
+    # k_value = 9
+    # solve_coloration(k_value, graph_path, use_MAC3=True, pick_var="smallest_domain", pick_val="smallest")
 
 
 if __name__ == "__main__":
