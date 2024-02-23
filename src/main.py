@@ -3,7 +3,7 @@ import time
 
 
 def solve_nqueens(n: int, save_file: bool = False, file_name: str = "instance/queens_csp.txt",
-                  use_MAC: bool = False, use_FW: bool = False, use_RMAC: bool = False,
+                  use_MAC3: bool = False, use_MAC4: bool = False, use_FW: bool = False, use_RMAC: bool = False,
                   pick_var: str = "smallest_domain", pick_val: str = "smallest") -> None:
     """
     Résout le problème des n reines en utilisant l'approche CSP.
@@ -11,14 +11,15 @@ def solve_nqueens(n: int, save_file: bool = False, file_name: str = "instance/qu
     :param n : Taille du plateau en n*n.
     :param save_file: True s'il faut sauvegarder le CSP dans un txt.
     :param file_name: Chemin où enregistrer le CSP.
-    :param use_MAC: Activation ou désactivation de l'algorithme MAC.
+    :param use_MAC3: Activation ou désactivation de l'algorithme MAC avec l'AC3.
+    :param use_MAC4: Activation ou désactivation de l'algorithme MAC avec l'AC4.
     :param use_FW: Activation ou désactivation du FordWard Checking.
     :param use_RMAC: Activation ou désactivation de l'algorithme MAC sur la racine uniquement.
     :param pick_var: Heuristique de choix sur les variables.
     :param pick_val: Heuristique de choix sur les valeurs.
     """
     # Vérifier que seulement un des trois algorithmes est activé
-    if sum([use_MAC, use_FW, use_RMAC]) > 1:
+    if sum([use_MAC3, use_MAC4, use_FW, use_RMAC]) > 1:
         raise ValueError("Au maximum, un seul des use_MAC, use_FW, ou use_RMAC peut être à True.")
 
     # Générer le CSP pour le problème des n queens
@@ -35,7 +36,7 @@ def solve_nqueens(n: int, save_file: bool = False, file_name: str = "instance/qu
     # Résoudre le problème en utilisant l'algorithme de backtrack selon les paramètres
     start_time = time.time()
     result, nodes = backtrack.backtrack(variables, constraints,
-                                        MAC=use_MAC, FW=use_FW, RMAC=use_RMAC,
+                                        MAC3=use_MAC3, MAC4=use_MAC4, FW=use_FW, RMAC=use_RMAC,
                                         pick_var=pick_var, pick_val=pick_val)
     end_time = time.time()
 
@@ -46,8 +47,8 @@ def solve_nqueens(n: int, save_file: bool = False, file_name: str = "instance/qu
         print(f"Solution pour le problème des n-queens avec n={n} : {result}")
         print(f"Temps d'exécution : {end_time - start_time} secondes")
         print(f"Nombre de nœuds explorés : {nodes}")
-        print(f"Paramètres utilisés : use_MAC={use_MAC}, use_FW={use_FW}, use_RMAC={use_RMAC}, pick_var={pick_var}, "
-              f"pick_val={pick_val}")
+        print(f"Paramètres utilisés : use_MA3={use_MAC3}, use_MA4={use_MAC4}, use_FW={use_FW}, "
+              f"use_RMAC={use_RMAC}, pick_var={pick_var}, pick_val={pick_val}")
 
 
 def solve_carrosserie() -> None:
@@ -74,7 +75,8 @@ def solve_carrosserie() -> None:
 
 def solve_coloration(k: int, graph_path: str, save_file: bool = False,
                      output_file_path: str = "../instance/graph_csp.txt",
-                     use_MAC: bool = False, use_FW: bool = False, use_RMAC: bool = False,
+                     use_MAC3: bool = False, use_MAC4: bool = False,
+                     use_FW: bool = False, use_RMAC: bool = False,
                      pick_var: str = "random", pick_val: str = "smallest") -> None:
     """
     Résolution d'un problème de k coloration d'un graphe.
@@ -83,7 +85,8 @@ def solve_coloration(k: int, graph_path: str, save_file: bool = False,
     :param graph_path: Chemin vers le graphe en format DIMACS.
     :param save_file: True s'il faut sauvegarder le CSP dans un txt.
     :param output_file_path: Chemin vers le fichier DIMACS du graphe.
-    :param use_MAC: Activation ou désactivation de l'algorithme MAC.
+    :param use_MAC3: Activation ou désactivation de l'algorithme MAC avec l'AC3.
+    :param use_MAC4: Activation ou désactivation de l'algorithme MAC avec l'AC4.
     :param use_FW: Activation ou désactivation du FordWard Checking.
     :param use_RMAC: Activation ou désactivation de l'algorithme MAC sur la racine uniquement.
     :param pick_var: Heuristique de choix sur les variables.
@@ -94,7 +97,7 @@ def solve_coloration(k: int, graph_path: str, save_file: bool = False,
     num_vertices, num_edges, graph = generate_instance.read_graph_dimacs(graph_path)
 
     # Vérifier que seulement un des trois algorithmes est activé
-    if sum([use_MAC, use_FW, use_RMAC]) > 1:
+    if sum([use_MAC3, use_MAC4, use_FW, use_RMAC]) > 1:
         raise ValueError("Exactly one of use_MAC, use_FW, or use_RMAC should be True.")
 
     if save_file:
@@ -110,7 +113,7 @@ def solve_coloration(k: int, graph_path: str, save_file: bool = False,
     # Résolution du problème avec l'algorithme de backtrack selon les paramètres
     start_time = time.time()
     result, nodes = backtrack.backtrack(variables, constraints,
-                                        MAC=use_MAC, FW=use_FW, RMAC=use_RMAC,
+                                        MAC3=use_MAC3, MAC4=use_MAC4, FW=use_FW, RMAC=use_RMAC,
                                         pick_var=pick_var, pick_val=pick_val)
     end_time = time.time()
 
@@ -123,23 +126,23 @@ def solve_coloration(k: int, graph_path: str, save_file: bool = False,
         print(f"Nombre de nœuds explorés : {nodes}")
 
     # Afficher les paramètres utilisés
-    print(f"Paramètres utilisés : use_MAC={use_MAC}, use_FW={use_FW}, use_RMAC={use_RMAC}, pick_var={pick_var}, "
-          f"pick_val={pick_val}")
+    print(f"Paramètres utilisés : use_MAC3={use_MAC3}, use_MAC4={use_MAC4}, use_FW={use_FW}, use_RMAC={use_RMAC}, "
+          f"pick_var={pick_var}, pick_val={pick_val}")
 
 
 def main():
     # Test des n reines avec différentes valeurs de taille de plateau.
-    for n_value in [10, 20]:
+    for n_value in [15]:
         print(f"\nTest des n reines avec n={n_value}")
-        solve_nqueens(n_value, use_FW=True, pick_var="smallest_domain", pick_val="smallest")
+        solve_nqueens(n_value, use_MAC4=True, pick_var="smallest_domain", pick_val="smallest")
 
-    print("\nTest carrosserie problème:")
-    solve_carrosserie()
+    # print("\nTest carrosserie problème:")
+    # solve_carrosserie()
 
-    print("\nTesting graph coloring problem:")
-    graph_path = "../instance/DIMACS Graphs/huck.col"
-    k_value = 11
-    solve_coloration(k_value, graph_path, use_RMAC=True, pick_var="random", pick_val="smallest")
+    # print("\nTesting graph coloring problem:")
+    # graph_path = "../instance/DIMACS Graphs/huck.col"
+    # k_value = 11
+    # solve_coloration(k_value, graph_path, use_RMAC=True, pick_var="random", pick_val="smallest")
 
 
 if __name__ == "__main__":
