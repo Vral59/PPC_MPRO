@@ -1,14 +1,17 @@
 from typing import Dict, List, Set, Tuple
 
 
-def ac3(variables: Dict[str, List[int]], contraintes: Dict[Tuple[str, str], List[Tuple[int, int]]]) -> Tuple[
-    Dict[str, List[int]], Dict[Tuple[str, str], List[Tuple[int, int]]]]:
+def ac3(variables: Dict[str, List[int]], contraintes: Dict[Tuple[str, str], List[Tuple[int, int]]]) \
+        -> Tuple[Dict[str, List[int]], Dict[Tuple[str, str], List[Tuple[int, int]]]]:
     """
     Applique l'Arc-Consistency à un ensemble de variables et de contraintes.
 
-    :param variables: Un dictionnaire où les clés sont les noms des variables et les valeurs sont des listes de domaines possibles.
-    :param contraintes: Un dictionnaire où les clés sont des paires de variables et les valeurs sont des listes de valeurs autorisées.
-    :return: Un tuple contenant les variables mises à jour et les contraintes mises à jour après l'application de l'Arc-Consistency.
+    :param variables: Un dictionnaire où les clés sont les noms des variables et les valeurs sont des listes de
+    domaines possibles.
+    :param contraintes: Un dictionnaire où les clés sont des paires de variables et les valeurs sont des listes de
+    valeurs autorisées.
+    :return: Un tuple contenant les variables mises à jour et les contraintes mises à jour après l'application de
+    l'Arc-Consistency.
     """
     variables_copy = {key: value.copy() for key, value in variables.items()}
 
@@ -49,13 +52,15 @@ def ac3(variables: Dict[str, List[int]], contraintes: Dict[Tuple[str, str], List
     return variables_copy, contraintes
 
 
-def _initAC4(variables: Dict[str, List[int]], contraintes: Dict[Tuple[str, str], List[Tuple[int, int]]]) -> Tuple[
-    Set[Tuple[str, int]], Dict[Tuple[str, int], Set[Tuple[str, int]]]]:
+def _initAC4(variables: Dict[str, List[int]], contraintes: Dict[Tuple[str, str], List[Tuple[int, int]]]) \
+        -> Tuple[Set[Tuple[str, int]], Dict[Tuple[str, int], Set[Tuple[str, int]]]]:
     """
     Initialise l'Arc-Consistency 4 (AC4) avec une file Q et un dictionnaire S.
 
-    :param variables: Un dictionnaire où les clés sont les noms des variables et les valeurs sont des listes de domaines possibles.
-    :param contraintes: Un dictionnaire où les clés sont des paires de variables et les valeurs sont des listes de valeurs autorisées.
+    :param variables: Un dictionnaire où les clés sont les noms des variables et les valeurs sont des listes de
+    domaines possibles.
+    :param contraintes: Un dictionnaire où les clés sont des paires de variables et les valeurs sont des listes de
+    valeurs autorisées.
     :return: Un tuple contenant la file Q et le dictionnaire S initialisés pour l'Arc-Consistency 4.
     """
 
@@ -79,23 +84,30 @@ def _initAC4(variables: Dict[str, List[int]], contraintes: Dict[Tuple[str, str],
     return Q, S
 
 
-def ac4(variables: Dict[str, List[int]], contraintes: Dict[Tuple[str, str], List[Tuple[int, int]]]) -> Tuple[
-    Dict[str, List[int]], Dict[Tuple[str, str], List[Tuple[int, int]]]]:
+def ac4(variables: Dict[str, List[int]], contraintes: Dict[Tuple[str, str], List[Tuple[int, int]]]) \
+        -> Tuple[Dict[str, List[int]], Dict[Tuple[str, str], List[Tuple[int, int]]]]:
     """
     Applique l'Arc-Consistency 4 (AC4) à un ensemble de variables et de contraintes.
 
-    :param variables: Un dictionnaire où les clés sont les noms des variables et les valeurs sont des listes de domaines possibles.
-    :param contraintes: Un dictionnaire où les clés sont des paires de variables et les valeurs sont des listes de valeurs autorisées.
-    :return: Un tuple contenant les variables mises à jour et les contraintes mises à jour après l'application de l'Arc-Consistency 4.
+    :param variables: Un dictionnaire où les clés sont les noms des variables et les valeurs sont des listes de
+    domaines possibles.
+    :param contraintes: Un dictionnaire où les clés sont des paires de variables et les valeurs sont des listes de
+    valeurs autorisées.
+    :return: Un tuple contenant les variables mises à jour et les contraintes mises à jour après l'application de
+    l'Arc-Consistency 4.
     """
     variables_copy = {key: value.copy() for key, value in variables.items()}
     Q, S = _initAC4(variables_copy, contraintes)
 
     while Q:
         y, b = Q.pop()
+        to_remove = set()
         for x, a in S.get((y, b), set()):
             if (x, a) in Q:
                 Q.remove((x, a))
+            to_remove.add((x, a))
+        for item in to_remove:
+            x, a = item
             for x_a, y_b in S.items():
                 if (x, a) in y_b:
                     y_b.remove((x, a))

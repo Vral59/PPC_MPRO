@@ -1,11 +1,13 @@
+import arc_consistency
 import random
-from typing import Dict, Set, Tuple, Union, List
+from typing import Dict, Tuple, Union, List
 
 
 def backtrack(
     variables: Dict[str, List[int]],
     constraints: Dict[Tuple[str, str], List[Tuple[int, int]]],
-    MAC: bool = False,
+    MAC3: bool = False,
+    MAC4: bool = False,
     FW: bool = False,
     RMAC: bool = False,
     pick_var: str = "smallest_ind",
@@ -16,7 +18,8 @@ def backtrack(
 
     :param variables: Dictionnaire des variables et des domaines.
     :param constraints: Dictionnaire des contraintes binaires.
-    :param MAC: Activation ou désactivation de l'algorithme MAC.
+    :param MAC3: Activation ou désactivation de l'algorithme MAC avec AC3.
+    :param MAC4: Activation ou désactivation de l'algorithme MAC avec AC4.
     :param FW: Activation ou désactivation du FordWard Checking.
     :param RMAC: Activation ou désactivation de l'algorithme MAC sur la racine uniquement.
     :param pick_var: Heuristique de choix sur les variables.
@@ -24,7 +27,8 @@ def backtrack(
     :return: Une solution valide ou None.
     """
     # Vérifier si pick_var est une valeur valide
-    valid_pick_var_options = ["smallest_ind", "biggest_ind", "smallest_domain", "largest_domain", "random", "most_constrained", "least_constrained"]
+    valid_pick_var_options = ["smallest_ind", "biggest_ind", "smallest_domain", "largest_domain", "random",
+                              "most_constrained", "least_constrained"]
     if pick_var not in valid_pick_var_options:
         raise ValueError(f"Valeur invalide pour pick_var. Attendue parmi {valid_pick_var_options}, obtenue {pick_var}")
 
@@ -45,42 +49,6 @@ def backtrack(
 
         for y in [nom for nom in variables if nom not in solution]:
             variables[y] = [b for b in variables[y] if check_FW(a, b, x, y)]
-
-    def maintain_ac4_consistency(x: str, a: int) -> None:
-        """
-        Application de l'algorithme MAC avec un AC4.
-        """
-        nonlocal variables
-        nonlocal constraints
-        Q: Set[Tuple[str, int]] = set()
-        S: Dict[Tuple[str, int], Set[Tuple[str, int]]] = {}
-
-        for c, valeurs in constraints.items():
-            y1, y2 = c
-
-            if y1 == x or y2 == x:
-                for b1 in variables[y1]:
-                    if (a, b1) not in valeurs:
-                        Q.add((y1, b1))
-
-                for b2 in variables[y2]:
-                    if (a, b2) not in valeurs:
-                        Q.add((y2, b2))
-
-        while Q:
-            y, b = Q.pop()
-
-            for other_y in [nom for nom in variables if nom != y and nom not in solution]:
-                for other_b in variables[other_y]:
-                    if (y, b) in constraints.get((other_y, str(other_b)), set()):
-                        if (other_y, other_b) not in S:
-                            S[(other_y, other_b)] = set()
-                        S[(other_y, other_b)].add((y, b))
-                        Q.add((other_y, other_b))
-
-        for y, b in S.keys():
-            if len(S[(y, b)]) == 0 and b in variables[y]:
-                variables[y].remove(b)
 
     def check_FW(a: int, b: int, x: str, y: str) -> bool:
         nonlocal variables
@@ -163,10 +131,19 @@ def backtrack(
             saved_variables = variables.copy()
             if FW:
                 apply_FW(unassigned_variable, valeur)
-            elif MAC:
-                maintain_ac4_consistency(unassigned_variable, valeur)
+            elif MAC3:
+                for el in solution:
+                    variables[el] = [solution[el]]
+                variables, _ = arc_consistency.ac3(variables, constraints)
+            elif MAC4:
+                for el in solution:
+                    variables[el] = [solution[el]]
+                variables, _ = arc_consistency.ac4(variables, constraints)
             elif RMAC and len(solution) == 1:
-                maintain_ac4_consistency(unassigned_variable, valeur)
+                # TODO : Nettoyer la boucle inutile
+                for el in solution:
+                    variables[el] = [solution[el]]
+                variables, _ = arc_consistency.ac3(variables, constraints)
 
             if verifie_contraintes():
                 if backtrack_recursive():
