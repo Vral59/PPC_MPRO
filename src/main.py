@@ -1,5 +1,6 @@
-from src import backtrack, arc_consistency, generate_instance, read_csp
+import backtrack, arc_consistency, generate_instance, read_csp
 import time
+import pandas as pd
 
 
 def solve_nqueens(n: int, save_file: bool = False, file_name: str = "instance/queens_csp.txt",
@@ -145,5 +146,34 @@ def main():
     # solve_coloration(k_value, graph_path, use_MAC3=True, pick_var="smallest_domain", pick_val="smallest")
 
 
+def pipeline( use_MAC3: bool = False, use_MAC4: bool = False, use_FW: bool = False, use_RMAC: bool = False,
+                  pick_var: str = "smallest_domain", pick_val: str = "smallest"):
+    path = "src/results/" +"MAC3_" * use_MAC3 + "MAC4_" * use_MAC4 + "FW_" * use_FW + "RMAC_" * use_RMAC + pick_var + "_" + pick_val + ".csv"
+    total_time = 0
+    n = 4
+    new_df = pd.DataFrame(columns=['n', 'time', 'total_time', 'nodes', 'results'])
+    while total_time <= 60:
+        n, m, variables, constraints = generate_instance.generate_queens_dict(n)
+        start_time = time.time()
+        result, nodes = backtrack.backtrack(variables, constraints,
+                                            MAC3=use_MAC3, MAC4=use_MAC4, FW=use_FW, RMAC=use_RMAC,
+                                        pick_var=pick_var, pick_val=pick_val)
+        end_time = time.time()
+        if result is None:
+            print(f"Aucune solution trouvée pour le problème des n-queens avec n={n}.")
+        else:
+            print(f"Solution pour le problème des n-queens avec n={n} : {result}")
+            print(f"Temps d'exécution : {end_time - start_time} secondes")
+            print(f"Nombre de nœuds explorés : {nodes}")
+            print(f"Paramètres utilisés : use_MA3={use_MAC3}, use_MA4={use_MAC4}, use_FW={use_FW}, "
+                f"use_RMAC={use_RMAC}, pick_var={pick_var}, pick_val={pick_val}")
+        
+       
+        total_time += end_time - start_time
+        new_df = new_df._append({'n': n, 'time': end_time - start_time, 'total_time': total_time, 'nodes': nodes, 'results' : str(result)}, ignore_index=True)
+        new_df.to_csv(path, index=False)
+        n += 1
+        
+
 if __name__ == "__main__":
-    main()
+    pipeline(use_MAC3= True)
