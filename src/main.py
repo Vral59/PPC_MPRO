@@ -1,7 +1,12 @@
-import backtrack, arc_consistency, generate_instance, read_csp
-import time
-import pandas as pd
 import os
+import time
+
+import pandas as pd
+
+import arc_consistency
+import backtrack
+import generate_instance
+import read_csp
 
 
 def solve_nqueens(n: int, save_file: bool = False, file_name: str = "instance/queens_csp.txt",
@@ -124,9 +129,10 @@ def solve_coloration(k: int, graph_path: str, save_file: bool = False,
         print(f"Aucune solution trouvée pour le problème de coloration de graphe avec {k} couleurs.")
     else:
         print(f"Solution pour le problème de coloration du graphe {graph_path} : ", result)
-    print(f"Temps d'exécution : {round(end_time - start_time,5)} secondes")
+    print(f"Temps d'exécution : {round(end_time - start_time, 5)} secondes")
     print(f"Nombre de nœuds explorés : {nodes}")
-    print(graph_path[23:-4], " & ", str(num_vertices),  " & " + str(num_edges ), " & ", k , " & ", round(end_time - start_time,5), " & ", nodes)
+    print(graph_path[23:-4], " & ", str(num_vertices), " & " + str(num_edges), " & ", k, " & ",
+          round(end_time - start_time, 5), " & ", nodes)
 
     # Afficher les paramètres utilisés
     print(f"Paramètres utilisés : use_MAC3={use_MAC3}, use_MAC4={use_MAC4}, use_FW={use_FW}, use_RMAC={use_RMAC}, "
@@ -135,24 +141,15 @@ def solve_coloration(k: int, graph_path: str, save_file: bool = False,
 
 def main():
     # Test des n reines avec différentes valeurs de taille de plateau.
-    for n_value in [12]:
-        print(f"\nTest des n reines avec n={n_value}")
-        solve_nqueens(n_value, use_MAC4=True, pick_var="smallest_domain", pick_val="smallest")
-
-    # print("\nTest carrosserie problème:")
-    # solve_carrosserie()
-
-    # print("\nTesting graph coloring problem:")
-    # graph_path = "../instance/DIMACS Graphs/games120.col"
-    # k_value = 9
-    # solve_coloration(k_value, graph_path, use_MAC3=True, pick_var="smallest_domain", pick_val="smallest")
+    n_value = 10
+    print(f"\nTest des n reines avec n={n_value}")
+    solve_nqueens(n_value, use_MAC4=True, pick_var="smallest_domain", pick_val="smallest")
 
 
-def pipeline( use_MAC3: bool = False, use_MAC4: bool = False, use_FW: bool = False, use_RMAC: bool = False,
-                  pick_var: str = "smallest_domain", pick_val: str = "smallest"):
-    path = "src/results/" +"MAC3_" * use_MAC3 + "MAC4_" * use_MAC4 + "FW_" * use_FW + "RMAC_" * use_RMAC + pick_var + "_" + pick_val + ".csv"
-    
-    
+def pipeline(use_MAC3: bool = False, use_MAC4: bool = False, use_FW: bool = False, use_RMAC: bool = False,
+             pick_var: str = "smallest_domain", pick_val: str = "smallest"):
+    path = "src/results/" + "MAC3_" * use_MAC3 + "MAC4_" * use_MAC4 + "FW_" * use_FW + "RMAC_" * use_RMAC + pick_var + "_" + pick_val + ".csv"
+
     if os.path.exists(path):
         print(f"The file '{path}' exists.")
         new_df = pd.read_csv(path)
@@ -170,7 +167,7 @@ def pipeline( use_MAC3: bool = False, use_MAC4: bool = False, use_FW: bool = Fal
         start_time = time.time()
         result, nodes = backtrack.backtrack(variables, constraints,
                                             MAC3=use_MAC3, MAC4=use_MAC4, FW=use_FW, RMAC=use_RMAC,
-                                        pick_var=pick_var, pick_val=pick_val, time_limit=600 - total_time)
+                                            pick_var=pick_var, pick_val=pick_val, time_limit=600 - total_time)
         end_time = time.time()
         if result is None:
             print(f"Aucune solution trouvée pour le problème des n-queens avec n={n}.")
@@ -180,17 +177,15 @@ def pipeline( use_MAC3: bool = False, use_MAC4: bool = False, use_FW: bool = Fal
             print(f"Temps d'exécution : {end_time - start_time} secondes")
             print(f"Nombre de nœuds explorés : {nodes}")
             print(f"Paramètres utilisés : use_MA3={use_MAC3}, use_MA4={use_MAC4}, use_FW={use_FW}, "
-                f"use_RMAC={use_RMAC}, pick_var={pick_var}, pick_val={pick_val}")
-        
-       
+                  f"use_RMAC={use_RMAC}, pick_var={pick_var}, pick_val={pick_val}")
+
         total_time += end_time - start_time
-        new_df = new_df._append({'n': n, 'time': end_time - start_time, 'total_time': total_time, 'nodes': nodes, 'results' : str(result)}, ignore_index=True)
+        new_df = new_df._append(
+            {'n': n, 'time': end_time - start_time, 'total_time': total_time, 'nodes': nodes, 'results': str(result)},
+            ignore_index=True)
         new_df.to_csv(path, index=False)
         n += 1
-        
+
 
 if __name__ == "__main__":
-
-    for k in [31]:
-        solve_coloration(k, "instance/DIMACS_Graphs/miles750.col", pick_var = "smallest_domain", pick_val = "smallest", use_FW = True, use_MAC3= True)
-    
+    main()
