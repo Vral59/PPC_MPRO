@@ -1,7 +1,7 @@
 import arc_consistency
 import random
 from typing import Dict, Tuple, Union, List
-
+import time
 
 def backtrack(
     variables: Dict[str, List[int]],
@@ -11,7 +11,8 @@ def backtrack(
     FW: bool = False,
     RMAC: bool = False,
     pick_var: str = "smallest_ind",
-    pick_val: str = "smallest"
+    pick_val: str = "smallest", 
+    time_limit: int = 600
 ) -> Union[Tuple[Dict[str, int], int], Tuple[None, None]]:
     """
     Algorithme de retour en arrière pour résoudre un CSP.
@@ -26,6 +27,7 @@ def backtrack(
     :param pick_val: Heuristique de choix sur les valeurs.
     :return: Une solution valide ou None.
     """
+    start_time = time.time()
     # Vérifier si pick_var est une valeur valide
     valid_pick_var_options = ["smallest_ind", "biggest_ind", "smallest_domain", "largest_domain", "random",
                               "most_constrained", "least_constrained"]
@@ -33,7 +35,7 @@ def backtrack(
         raise ValueError(f"Valeur invalide pour pick_var. Attendue parmi {valid_pick_var_options}, obtenue {pick_var}")
 
     # Vérifier si pick_val est une valeur valide
-    valid_pick_val_options = ["smallest", "biggest", "smallest_domain", "biggest_domain"]
+    valid_pick_val_options = ["smallest", "biggest", "smallest_domain", "biggest_domain", "odd_even", "random"]
     if pick_val not in valid_pick_val_options:
         raise ValueError(f"Valeur invalide pour pick_val. Attendue parmi {valid_pick_val_options}, obtenue {pick_val}")
 
@@ -96,17 +98,26 @@ def backtrack(
         """
         nonlocal variables
         nonlocal constraints
+        nonlocal solution
 
         if pick_val == "smallest":
             return sorted(variables[variable])
         elif pick_val == "biggest":
             return sorted(variables[variable], reverse=True)
-        elif pick_val == "smallest_domain":
+        elif pick_val == "smallest_domain": # nombre de fois ou la valeur apparait dans les contraintes
             return sorted(variables[variable], key=lambda v: sum(
                 sum(1 for z in constraints[(x, y)] if v in z) for (x, y) in constraints))
         elif pick_val == "biggest_domain":
             return sorted(variables[variable], key=lambda v: sum(
                 sum(1 for z in constraints[(x, y)] if v in z) for (x, y) in constraints), reverse=True)
+        elif pick_val == 'odd_even':
+            if len(solution) % 2 == 0:
+                return sorted(variables[variable], reverse=True)
+            else:   
+                return sorted(variables[variable], reverse=True)
+        elif pick_val == 'random':
+            random.shuffle(variables[variable])
+            return (variables[variable])
 
     def backtrack_recursive() -> bool:
         """
@@ -115,6 +126,12 @@ def backtrack(
         nonlocal solution
         nonlocal variables
         nonlocal node
+
+        nonlocal start_time
+        if time.time() - start_time > time_limit:
+            print("Timeout")
+            return False
+        
         ordered_values = list[int]
         if len(solution) == len(variables):
             return True  # Solution trouvée

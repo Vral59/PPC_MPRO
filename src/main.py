@@ -1,6 +1,7 @@
 import backtrack, arc_consistency, generate_instance, read_csp
 import time
 import pandas as pd
+import os
 
 
 def solve_nqueens(n: int, save_file: bool = False, file_name: str = "instance/queens_csp.txt",
@@ -98,7 +99,7 @@ def solve_coloration(k: int, graph_path: str, save_file: bool = False,
     num_vertices, num_edges, graph = generate_instance.read_graph_dimacs(graph_path)
 
     # Vérifier que seulement un des trois algorithmes est activé
-    if sum([use_MAC3, use_MAC4, use_FW, use_RMAC]) > 1:
+    if sum([use_MAC3, use_MAC4, use_RMAC]) > 1:
         raise ValueError("Exactly one of use_MAC, use_FW, or use_RMAC should be True.")
 
     if save_file:
@@ -123,12 +124,13 @@ def solve_coloration(k: int, graph_path: str, save_file: bool = False,
         print(f"Aucune solution trouvée pour le problème de coloration de graphe avec {k} couleurs.")
     else:
         print(f"Solution pour le problème de coloration du graphe {graph_path} : ", result)
-        print(f"Temps d'exécution : {end_time - start_time} secondes")
-        print(f"Nombre de nœuds explorés : {nodes}")
+    print(f"Temps d'exécution : {round(end_time - start_time,5)} secondes")
+    print(f"Nombre de nœuds explorés : {nodes}")
+    print(graph_path[23:-4], " & ", str(num_vertices),  " & " + str(num_edges ), " & ", k , " & ", round(end_time - start_time,5), " & ", nodes)
 
     # Afficher les paramètres utilisés
     print(f"Paramètres utilisés : use_MAC3={use_MAC3}, use_MAC4={use_MAC4}, use_FW={use_FW}, use_RMAC={use_RMAC}, "
-          f"pick_var={pick_var}, pick_val={pick_val}")
+          f"pick_var={pick_var}, pick_val={pick_val}", "\n")
 
 
 def main():
@@ -149,18 +151,30 @@ def main():
 def pipeline( use_MAC3: bool = False, use_MAC4: bool = False, use_FW: bool = False, use_RMAC: bool = False,
                   pick_var: str = "smallest_domain", pick_val: str = "smallest"):
     path = "src/results/" +"MAC3_" * use_MAC3 + "MAC4_" * use_MAC4 + "FW_" * use_FW + "RMAC_" * use_RMAC + pick_var + "_" + pick_val + ".csv"
-    total_time = 0
-    n = 4
-    new_df = pd.DataFrame(columns=['n', 'time', 'total_time', 'nodes', 'results'])
-    while total_time <= 60:
+    
+    
+    if os.path.exists(path):
+        print(f"The file '{path}' exists.")
+        new_df = pd.read_csv(path)
+        total_time = new_df.iloc[-1]['total_time']
+        print("temps ecoule : ", total_time)
+        n = new_df.iloc[-1]['n'] + 1
+    else:
+        print(f"The file '{path}' does not exist.")
+        new_df = pd.DataFrame(columns=['n', 'time', 'total_time', 'nodes', 'results'])
+        n = 4
+        total_time = 0
+
+    while total_time <= 600:
         n, m, variables, constraints = generate_instance.generate_queens_dict(n)
         start_time = time.time()
         result, nodes = backtrack.backtrack(variables, constraints,
                                             MAC3=use_MAC3, MAC4=use_MAC4, FW=use_FW, RMAC=use_RMAC,
-                                        pick_var=pick_var, pick_val=pick_val)
+                                        pick_var=pick_var, pick_val=pick_val, time_limit=600 - total_time)
         end_time = time.time()
         if result is None:
             print(f"Aucune solution trouvée pour le problème des n-queens avec n={n}.")
+            break
         else:
             print(f"Solution pour le problème des n-queens avec n={n} : {result}")
             print(f"Temps d'exécution : {end_time - start_time} secondes")
@@ -176,4 +190,7 @@ def pipeline( use_MAC3: bool = False, use_MAC4: bool = False, use_FW: bool = Fal
         
 
 if __name__ == "__main__":
-    pipeline(use_MAC3= True)
+
+    for k in [31]:
+        solve_coloration(k, "instance/DIMACS_Graphs/miles750.col", pick_var = "smallest_domain", pick_val = "smallest", use_FW = True, use_MAC3= True)
+    
