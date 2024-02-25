@@ -15,7 +15,7 @@ def solve_nqueens(n: int, save_file: bool = False, file_name: str = "instance/qu
     """
     Résout le problème des n reines en utilisant l'approche CSP.
 
-    :param n : Taille du plateau en n*n.
+    :param n: Taille du plateau en n*n.
     :param save_file: True s'il faut sauvegarder le CSP dans un txt.
     :param file_name: Chemin où enregistrer le CSP.
     :param use_MAC3: Activation ou désactivation de l'algorithme MAC avec l'AC3.

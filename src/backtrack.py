@@ -15,7 +15,7 @@ def backtrack(
     time_limit: int = 600
 ) -> Union[Tuple[Dict[str, int], int], Tuple[None, None]]:
     """
-    Algorithme de retour en arrière pour résoudre un CSP.
+    Algorithme de backtrack pour résoudre un CSP.
 
     :param variables: Dictionnaire des variables et des domaines.
     :param constraints: Dictionnaire des contraintes binaires.

@@ -1,0 +1,7 @@
+arc\_consistency module
+=======================
+
+.. automodule:: arc_consistency
+   :members:
+   :undoc-members:
+   :show-inheritance:

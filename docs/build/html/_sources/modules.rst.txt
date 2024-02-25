@@ -1,0 +1,11 @@
+src
+===
+
+.. toctree::
+   :maxdepth: 4
+
+   arc_consistency
+   backtrack
+   generate_instance
+   main
+   read_csp

@@ -4,6 +4,7 @@ from typing import Dict, List, Set, Tuple
 def generate_queens_csp(n: int, file_path: str) -> None:
     """
     Crée un CSP binaire au format .txt pour le problème des n reines.
+
     :param n: Taille du plateau n*n.
     :param file_path: Chemin pour stocker le futur fichier .txt.
     """
@@ -30,6 +31,7 @@ def generate_queens_csp(n: int, file_path: str) -> None:
 def read_graph_dimacs(file_path: str) -> Tuple[int, int, Dict[int, List[int]]]:
     """
     Ouvre un fichier au format DIMACS représentant un graphe et crée un dictionnaire du graphe.
+
     :param file_path: Chemin vers le fichier DIMACS.
     :return: Un tuple contenant le nombre de sommets, le nombre d'arêtes et le dictionnaire représentant le graphe.
     """
@@ -67,6 +69,7 @@ def read_graph_dimacs(file_path: str) -> Tuple[int, int, Dict[int, List[int]]]:
 def generate_graph_csp(graph: Dict[int, List[int]], n: int, m: int, k: int, output_file: str) -> None:
     """
     Génère un CSP au format .txt pour le problème de coloration d'un graphe.
+
     :param graph: Dictionnaire représentant le graphe.
     :param n: Nombre de sommets dans le graphe.
     :param m: Nombre d'arêtes dans le graphe.
@@ -99,9 +102,9 @@ def generate_graph_csp(graph: Dict[int, List[int]], n: int, m: int, k: int, outp
 def generate_queens_dict(n: int) -> Tuple[int, int, Dict[str, List[int]], Dict[Tuple[str, str], List[Tuple[int, int]]]]:
     """
     Génère les structures nécessaires pour le problème des n reines sans créer de fichier.
+
     :param n: Taille du plateau n*n.
-    :return: Le nombre de variables, le nombre de contraintes, un dictionnaire de domaines de variables et un
-    dictionnaire de tuples variables-valeurs.
+    :return: Le nombre de variables, le nombre de contraintes, un dictionnaire de domaines de variables et un dictionnaire de tuples variables-valeurs.
     """
     variables = {}
     constraints = {}
@@ -130,10 +133,10 @@ def generate_graph_dict(graph: Dict[int, List[int]], k: int) -> \
         Tuple[int, int, Dict[str, List[int]], Dict[Tuple[str, str], List[Tuple[int, int]]]]:
     """
     Génère les structures nécessaires pour le problème de coloration de graphe sans créer de fichier.
+
     :param graph: Dictionnaire représentant le graphe.
     :param k: Nombre de couleurs disponibles.
-    :return: Le nombre de variables, le nombre de contraintes, un dictionnaire de domaines de variables et un
-    dictionnaire de tuples variables-valeurs.
+    :return: Le nombre de variables, le nombre de contraintes, un dictionnaire de domaines de variables et un dictionnaire de tuples variables-valeurs.
     """
     variables = {}
     constraints = {}
@@ -161,6 +164,7 @@ def add_all_diff(variables: Dict[str, Set[int]], constraints: Dict[Tuple[str, st
                  x2: str) -> None:
     """
     Ajoute une contrainte 'toutes différentes' entre deux variables.
+
     :param variables: Dictionnaire de domaines de variables.
     :param constraints: Dictionnaire de contraintes.
     :param x1: Première variable.
@@ -179,6 +183,7 @@ def add_c1_smaller_c2(variables: Dict[str, Set[int]], constraints: Dict[Tuple[st
                       x2: str) -> None:
     """
     Ajoute une contrainte indiquant que x1 est inférieur à x2.
+
     :param variables: Dictionnaire de domaines de variables.
     :param constraints: Dictionnaire de contraintes.
     :param x1: Première variable.

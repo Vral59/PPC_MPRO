@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import os
 import random
-directory = './src/results/saved_files'
+directory = '../src/results/saved_files'
 
 files = os.listdir(directory)
 for file in files:

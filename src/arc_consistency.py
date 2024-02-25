@@ -6,12 +6,9 @@ def ac3(variables: Dict[str, List[int]], contraintes: Dict[Tuple[str, str], List
     """
     Applique l'Arc-Consistency à un ensemble de variables et de contraintes.
 
-    :param variables: Un dictionnaire où les clés sont les noms des variables et les valeurs sont des listes de
-    domaines possibles.
-    :param contraintes: Un dictionnaire où les clés sont des paires de variables et les valeurs sont des listes de
-    valeurs autorisées.
-    :return: Un tuple contenant les variables mises à jour et les contraintes mises à jour après l'application de
-    l'Arc-Consistency.
+    :param variables: Un dictionnaire où les clés sont les noms des variables et les valeurs sont des listes de domaines possibles.
+    :param contraintes: Un dictionnaire où les clés sont des paires de variables et les valeurs sont des listes de valeurs autorisées.
+    :return: Un tuple contenant les variables mises à jour et les contraintes mises à jour après l'application de l'Arc-Consistency.
     """
     variables_copy = {key: value.copy() for key, value in variables.items()}
 
@@ -57,10 +54,8 @@ def _initAC4(variables: Dict[str, List[int]], contraintes: Dict[Tuple[str, str],
     """
     Initialise l'Arc-Consistency 4 (AC4) avec une file Q et un dictionnaire S.
 
-    :param variables: Un dictionnaire où les clés sont les noms des variables et les valeurs sont des listes de
-    domaines possibles.
-    :param contraintes: Un dictionnaire où les clés sont des paires de variables et les valeurs sont des listes de
-    valeurs autorisées.
+    :param variables: Un dictionnaire où les clés sont les noms des variables et les valeurs sont des listes de domaines possibles.
+    :param contraintes: Un dictionnaire où les clés sont des paires de variables et les valeurs sont des listes de valeurs autorisées.
     :return: Un tuple contenant la file Q et le dictionnaire S initialisés pour l'Arc-Consistency 4.
     """
 
@@ -89,12 +84,9 @@ def ac4_old(variables: Dict[str, List[int]], contraintes: Dict[Tuple[str, str], 
     """
     Applique l'Arc-Consistency 4 (AC4) à un ensemble de variables et de contraintes.
 
-    :param variables: Un dictionnaire où les clés sont les noms des variables et les valeurs sont des listes de
-    domaines possibles.
-    :param contraintes: Un dictionnaire où les clés sont des paires de variables et les valeurs sont des listes de
-    valeurs autorisées.
-    :return: Un tuple contenant les variables mises à jour et les contraintes mises à jour après l'application de
-    l'Arc-Consistency 4.
+    :param variables: Un dictionnaire où les clés sont les noms des variables et les valeurs sont des listes de domaines possibles.
+    :param contraintes: Un dictionnaire où les clés sont des paires de variables et les valeurs sont des listes de valeurs autorisées.
+    :return: Un tuple contenant les variables mises à jour et les contraintes mises à jour après l'application de l'Arc-Consistency 4.
     """
     variables_copy = {key: value.copy() for key, value in variables.items()}
     Q, S = _initAC4(variables_copy, contraintes)
@@ -123,12 +115,9 @@ def ac4(variables: Dict[str, List[int]], contraintes: Dict[Tuple[str, str], List
     """
     Applique l'Arc-Consistency 4 (AC4) à un ensemble de variables et de contraintes.
 
-    :param variables: Un dictionnaire où les clés sont les noms des variables et les valeurs sont des listes de
-    domaines possibles.
-    :param contraintes: Un dictionnaire où les clés sont des paires de variables et les valeurs sont des listes de
-    valeurs autorisées.
-    :return: Un tuple contenant un booléen indiquant si l'AC4 a réussi et les variables mises à jour après l'application
-    de l'Arc-Consistency 4.
+    :param variables: Un dictionnaire où les clés sont les noms des variables et les valeurs sont des listes de domaines possibles.
+    :param contraintes: Un dictionnaire où les clés sont des paires de variables et les valeurs sont des listes de valeurs autorisées.
+    :return: Un tuple contenant un booléen indiquant si l'AC4 a réussi et les variables mises à jour après l'application de l'Arc-Consistency 4.
     """
 
     variables_copy = {key: value.copy() for key, value in variables.items()}

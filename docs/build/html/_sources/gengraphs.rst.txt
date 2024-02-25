@@ -1,0 +1,7 @@
+gengraphs module
+================
+
+.. automodule:: gengraphs
+   :members:
+   :undoc-members:
+   :show-inheritance:

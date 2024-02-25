@@ -1,5 +1,5 @@
 # PPC MPRO Projet
-Réalisation d’un mini solveur de CSP binaires
+Ce projet vise à réaliser un mini solveur de CSP binaires.
 
 ## Structure du fichier CSP
 
@@ -17,6 +17,16 @@ Pour ce projet, aucun requirement externe n'est requis pour l'exécution, à par
 
 Vous pouvez ajuster les paramètres dans la fonction main() du fichier main.py pour résoudre différents problèmes disponibles.
 
+## Structure du projet 
+Structure du Projet
+
+- `docs/` : Contient la documentation du projet générée avec Sphinx. Par exemple, dans `docs/build/html`, le fichier `index.html` récapitule la documentation.
+
+- `instance/` : Contient des graphes et des exemples de CSP.
+
+- `src/` : Contient le code source du projet, avec différents fichiers .py.
+
+- `result/` : Contient les fichiers CSV récapitulant les résultats du projet.
 ## Exécution 
 Pour exécuter le projet, utilisez la commande suivante dans votre terminal :
 ```bash

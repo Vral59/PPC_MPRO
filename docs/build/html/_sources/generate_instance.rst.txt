@@ -1,0 +1,7 @@
+generate\_instance module
+=========================
+
+.. automodule:: generate_instance
+   :members:
+   :undoc-members:
+   :show-inheritance:

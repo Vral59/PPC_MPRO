@@ -1,0 +1,7 @@
+backtrack module
+================
+
+.. automodule:: backtrack
+   :members:
+   :undoc-members:
+   :show-inheritance:
